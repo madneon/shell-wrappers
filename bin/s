@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Copyright © 2016 by madneon
+# http://madneon.com
+
+tmp="/tmp/s-$$"
+list=""
+
+for c in $(<~/.ssh/list); do
+	l=`echo $c|cut -f1 -d"="`
+	c=`echo $c|cut -f2 -d"="`
+	list="$list $c $l "
+done
+
+if [ "$list" != "" ]; then
+	dialog --clear --extra-button --extra-label "Edit list" --menu "ssh connections:" 20 50 13 $list 2> $tmp
+else
+	mcedit ~/.ssh/list
+	exit 0
+fi
+
+case "$?" in
+	0)
+		l=`cat $tmp|cut -f1 -d"@"`
+		h=`cat $tmp|cut -f2 -d"@"|cut -f1 -d":"`
+		p=`cat $tmp|cut -f2 -d":"`
+		rm $tmp
+		ssh -l $l $h -p $p
+		;;
+	3)
+		mcedit ~/.ssh/list
+		;;
+	*)
+		rm $tmp
+		;;
+esac
+
+# madneon 2016-04-03

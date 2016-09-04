@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Copyright © 2014 by madneon
+# http://madneon.com
+
+db=~/.tails
+
+if [ -n "$1" ]; then
+	readlink -f "$1" >> $db
+	exit
+fi
+
+tmp="/tmp/s-$$"
+list=""
+i="0"
+for c in $(<$db); do
+	i=$((i+1))
+	list="$list $c $i "
+done
+
+if [ "$list" == "" ]; then
+	list="empty 0"
+fi
+dialog --menu "'tail -f' files:" 20 140 13 $list 2> $tmp
+
+res=$?
+case "$res" in
+	0)
+		p=`cat $tmp`
+		rm $tmp
+		reset
+		cd `dirname $p`
+		tail -f $p
+		;;
+	*)
+		rm $tmp
+		;;
+esac
+
+# madneon 2014-10-25

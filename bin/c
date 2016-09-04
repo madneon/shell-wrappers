@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Copyright © 2015 by madneon
+# http://madneon.com
+
+# This script utilizes Midnight Commander's directories hotlist.
+
+tmp="/tmp/c-$$"
+f_in=~/.config/mc/hotlist
+list=""
+i=0
+n=""
+
+for c in $(<$f_in); do
+	i=$((i+1))
+	c=`echo $c|cut -f2 -d'"'`
+	if [ $((i%4)) == 0 ]; then
+		list="$list $c $n "
+	else
+		if [ $((i%2)) == 0 ]; then
+			n=$c
+		fi
+	fi
+done
+
+if [ "$list" != "" ]; then
+	dialog --clear --extra-button --extra-label "Edit list" --menu "Directories:" 20 70 13 $list 2> $tmp
+else
+	mcedit $f_in
+	exit 0
+fi
+
+case "$?" in
+	0)
+		d=`cat $tmp`
+		cd $d
+		rm $tmp
+		;;
+	3)
+		mcedit $f_in
+		rm $tmp
+		;;
+	*)
+		rm $tmp
+		;;
+esac
+
+# madneon 2015-11-14

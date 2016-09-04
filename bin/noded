@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Copyright © 2013 by madneon
+# http://madneon.com
+
+# This is nodejs wrapper
+
+if [ "$1"X = X ]; then
+	echo "Usage: "`basename $0`" <filename>"
+	exit 1
+fi
+
+if [ ! -f "$1" ]; then
+	echo "File not found: $1"
+	exit 1
+fi
+
+npid=""
+
+function start() {
+	nodejs "$1" &
+	npid=$!
+	echo `date +"%F %T"`" Started nodejs (pid: $npid)"
+}
+
+start "$1"
+
+which inotifywait > /dev/null
+if [ $? = 0 ]; then
+	while inotifywait "$1" -qe modify > /dev/null; do
+		if [ $? == 0 ]; then
+			kill $npid
+			start "$1"
+		fi
+	done
+else
+	t=`stat --format %Y "$1"`
+	while true; do
+		t_last=$t
+		while [ $t = $t_last ]; do
+			sleep 1
+			t=`stat --format %Y "$1"`
+		done
+		kill $npid
+		start "$1"
+	done
+fi
+
+# madneon 2013-10-10
