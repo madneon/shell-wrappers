@@ -36,6 +36,9 @@ case "$1" in
 	'k')
 		CMD='checkout'
 		;;
+	'b')
+		CMD='branch'
+		;;
 	*)
 		CMD="$1"
 		;;
