@@ -7,8 +7,8 @@ tmp="/tmp/s-$$"
 list=""
 
 for c in $(<~/.ssh/list); do
-	l=`echo $c|cut -f1 -d"="`
-	c=`echo $c|cut -f2 -d"="`
+	l=`echo $c|cut -f1 -d"="` # label
+	c=`echo $c|cut -f2 -d"="` # connection string
 	list="$list $c $l "
 done
 
@@ -21,9 +21,9 @@ fi
 
 case "$?" in
 	0)
-		l=`cat $tmp|cut -f1 -d"@"`
-		h=`cat $tmp|cut -f2 -d"@"|cut -f1 -d":"`
-		p=`cat $tmp|cut -f2 -d":"`
+		l=`cat $tmp|cut -f1 -d"@"` # login
+		h=`cat $tmp|cut -f2 -d"@"|cut -f1 -d":"` # host
+		p=`cat $tmp|cut -f2 -d":"` # port
 		rm $tmp
 		ssh -l $l $h -p $p
 		;;
