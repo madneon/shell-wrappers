@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Copyright © 2017 by madneon
+# http://madneon.com
+
+tmp="/tmp/wol-$$"
+list=""
+
+for c in $(<~/.wols); do
+	l=`echo $c|cut -f1 -d"="` # label
+	a=`echo $c|cut -f2 -d"="` # address
+	list="$list $a $l "
+done
+
+if [ "$list" != "" ]; then
+	dialog --clear --extra-button --extra-label "Edit list" --menu "ssh connections:" 20 50 13 $list 2> $tmp
+else
+	mcedit ~/.wols
+	exit 0
+fi
+
+case "$?" in
+	0)
+		a=`cat $tmp|cut -f2 -d"="` # address
+		rm $tmp
+		wakeonlan $a
+		;;
+	3)
+		mcedit ~/.wols
+		;;
+	*)
+		rm $tmp
+		;;
+esac
+
+# madneon 2017-07-22
