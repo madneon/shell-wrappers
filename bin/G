@@ -15,6 +15,9 @@ case "$1" in
 	'c')
 		CMD='commit'
 		;;
+	'cm')
+		CMD='commit -m'
+		;;
 	'p')
 		CMD='push'
 		;;
