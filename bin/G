@@ -18,6 +18,9 @@ case "$1" in
 	'cm')
 		CMD='commit -m'
 		;;
+	'ca')
+		CMD='commit --amend'
+		;;
 	'p')
 		CMD='push'
 		;;
