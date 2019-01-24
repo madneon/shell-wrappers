@@ -6,8 +6,14 @@ case "$1" in
 	's')
 		CMD='status'
 		;;
+	'l')
+		CMD='log'
+		;;
 	'd')
 		CMD='diff'
+		;;
+	'dl')
+		CMD='diff @{1}..'
 		;;
 	'a')
 		CMD='add'
@@ -21,8 +27,14 @@ case "$1" in
 	'ca')
 		CMD='commit --amend'
 		;;
+	'cam')
+		CMD='commit --amend -m'
+		;;
 	'p')
 		CMD='push'
+		;;
+	'pf')
+		CMD='push --force'
 		;;
 	'u')
 		CMD='pull'
@@ -32,12 +44,6 @@ case "$1" in
 		;;
 	'g')
 		CMD='merge'
-		;;
-	'm')
-		CMD='mv'
-		;;
-	'r')
-		CMD='rm'
 		;;
 	'k')
 		CMD='checkout'
