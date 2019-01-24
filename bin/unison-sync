@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd ~/.unison
+for p in *.prf; do
+	unison-gtk $p &
+	sleep 0.1
+done
