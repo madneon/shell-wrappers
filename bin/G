@@ -33,6 +33,9 @@ case "$1" in
 	'p')
 		CMD='push'
 		;;
+	'pu')
+		CMD='push -u origin'
+		;;
 	'pf')
 		CMD='push --force'
 		;;
