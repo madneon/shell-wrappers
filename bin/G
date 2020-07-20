@@ -57,6 +57,9 @@ case "$1" in
 	'kb')
 		CMD='checkout -b'
 		;;
+	'n')
+		CMD='show --no-commit-id --name-only --oneline'
+		;;
 	*)
 		CMD="$1"
 		;;
