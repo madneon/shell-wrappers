@@ -54,6 +54,9 @@ case "$1" in
 	'b')
 		CMD='branch'
 		;;
+	'kb')
+		CMD='checkout -b'
+		;;
 	*)
 		CMD="$1"
 		;;
