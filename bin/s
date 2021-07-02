@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright © 2016 by madneon
+# Copyright © 2016-2021 by madneon
 # http://madneon.com
 
 tmp="/tmp/s-$$"
@@ -13,7 +13,7 @@ for c in $(<~/.ssh/list); do
 done
 
 if [ "$list" != "" ]; then
-	dialog --clear --extra-button --extra-label "Edit list" --menu "ssh connections:" 20 50 13 $list 2> $tmp
+	dialog --clear --extra-button --extra-label "Edit list" --menu "ssh connections:" 40 80 13 $list 2> $tmp
 else
 	mcedit ~/.ssh/list
 	exit 0
@@ -21,11 +21,16 @@ fi
 
 case "$?" in
 	0)
-		l=`cat $tmp|cut -f1 -d"@"` # login
-		h=`cat $tmp|cut -f2 -d"@"|cut -f1 -d":"` # host
-		p=`cat $tmp|cut -f2 -d":"` # port
+		j=`cat $tmp|cut -f2- -d","` # jumps
+		l=`cat $tmp|cut -f1 -d","|cut -f1 -d"@"` # login
+		h=`cat $tmp|cut -f1 -d","|cut -f2 -d"@"|cut -f1 -d":"` # host
+		p=`cat $tmp|cut -f1 -d","|cut -f2 -d":"` # port
 		rm $tmp
-		ssh -l $l $h -p $p
+
+		if [ -n "$j" ]; then
+			j="-J $j "
+		fi
+		ssh $j$l@$h -p $p
 		;;
 	3)
 		mcedit ~/.ssh/list
@@ -35,4 +40,4 @@ case "$?" in
 		;;
 esac
 
-# madneon 2016-04-03
+# madneon 2016-04-03,2021-07-02
