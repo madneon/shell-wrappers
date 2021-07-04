@@ -13,7 +13,7 @@ for c in $(<~/.ssh/list); do
 done
 
 if [ "$list" != "" ]; then
-	dialog --clear --extra-button --extra-label "Edit list" --menu "ssh connections:" 40 80 13 $list 2> $tmp
+	dialog --clear --extra-button --extra-label "Edit list" --menu "ssh connections:" 30 80 20 $list 2> $tmp
 else
 	mcedit ~/.ssh/list
 	exit 0
@@ -21,11 +21,16 @@ fi
 
 case "$?" in
 	0)
-		j=`cat $tmp|cut -f2- -d","` # jumps
-		l=`cat $tmp|cut -f1 -d","|cut -f1 -d"@"` # login
-		h=`cat $tmp|cut -f1 -d","|cut -f2 -d"@"|cut -f1 -d":"` # host
-		p=`cat $tmp|cut -f1 -d","|cut -f2 -d":"` # port
+		s=`cat $tmp`
 		rm $tmp
+		if [[ "$s" == *,* ]]; then
+			j=`echo $s|cut -f2- -d","` # jumps
+		else
+			j=''
+		fi
+		l=`echo $s|cut -f1 -d","|cut -f1 -d"@"` # login
+		h=`echo $s|cut -f1 -d","|cut -f2 -d"@"|cut -f1 -d":"` # host
+		p=`echo $s|cut -f1 -d","|cut -f2 -d":"` # port
 
 		if [ -n "$j" ]; then
 			j="-J $j "
